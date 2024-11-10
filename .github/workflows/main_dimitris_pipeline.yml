@@ -14,8 +14,7 @@ on:
       log_error:
         description: 'Enable error logging if tests fail'
         required: true
-        default: 'false'
-				
+        default: 'false'				
 
 jobs:
   test:

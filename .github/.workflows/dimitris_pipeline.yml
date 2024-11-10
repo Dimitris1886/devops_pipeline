@@ -1,16 +1,17 @@
-name: Dimitris Pipeline
+name: Test Secrets
 
-on:
-  workflow_dispatch:    # manual trigger
+on: 
+  workflow_dispatch: # Allows you to run the workflow manually from the Actions tab
 
 jobs:
-  Test:
+  test_secrets_job:
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: 
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v2
+
+      - name: Test if secret is available
+        run: echo "Secret is available!"
+        env:
+          MY_SECRET: ${{ secrets.FREE_CURRENCY_API_KEY }}

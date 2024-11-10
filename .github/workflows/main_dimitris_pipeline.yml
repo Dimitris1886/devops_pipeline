@@ -1,0 +1,69 @@
+name: Main Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      
+  pull_request:
+    branches:
+      - main # we can add extra branch if needed
+
+  workflow_dispatch:
+    inputs:
+      log_error:
+        description: 'Enable error logging if tests fail'
+        required: true
+        default: 'false'
+				
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    name: Test the Application
+
+    env:
+      APP_ENV: production
+      CURRENT_BRANCH: ${{ github.ref }}
+      API_KEY: ${ secrets.FREE_CURRENCY_API_KEY }
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+			- name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run tests
+        run: echo "Running tests..."
+
+      - name: Log errors if tests fail and log_error is true
+        if: failure() && github.event.inputs.log_error == 'true'
+        run: echo "Logging error..." > error_log.txt
+
+      - name: Upload error log
+        if: failure() && github.event.inputs.log_error == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: error_log
+          path: error_log.txt
+
+
+
+
+  # deploy:
+  #   runs-on: ubuntu-latest
+  #   name: Deploy the Application
+  #   needs: test
+
+  #   steps:
+  #     - name: Check out the repository
+  #       uses: actions/checkout@v2
+
+  #     - name: Deploy the application
+  #       run: echo "Deploying the application..."

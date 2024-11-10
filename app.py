@@ -1,8 +1,9 @@
 from dotenv import load_dotenv
 import os
-
 from flask import Flask, render_template, request
 import requests
+
+
 
 load_dotenv()
 app = Flask(__name__)
@@ -18,6 +19,9 @@ CURRENCIES = [
     'SAR', 'MYR', 'RON'
 ]
 
+
+
+
 def validate_amount(amount_str):
     try:
         amount = float(amount_str)
@@ -27,9 +31,13 @@ def validate_amount(amount_str):
             return amount, None
     except ValueError:
         return None, "Invalid amount entered."
+    
+
+
 
 def calculate_conversion(amount, rate):
     return amount * rate
+
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -88,5 +96,7 @@ def index():
 
 if __name__ == '__main__':
     if not API_KEY:
-        raise ValueError("No API key found. Please set the FREE_CURRENCY_API_KEY environment variable.")
+       raise ValueError("No API key found. Please set the FREE_CURRENCY_API_KEY environment variable.")
     app.run(debug=True)
+
+

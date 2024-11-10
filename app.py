@@ -21,7 +21,6 @@ CURRENCIES = [
 
 
 
-
 def validate_amount(amount_str):
     try:
         amount = float(amount_str)

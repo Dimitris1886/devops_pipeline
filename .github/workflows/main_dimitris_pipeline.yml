@@ -39,7 +39,9 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Run tests
-        run: echo "Running tests..."
+        id: run_tests
+        run: pytest tests/ > pytest-results.log
+        continue-on-error: true
 
       - name: Log errors if tests fail and log_error is true
         if: failure() && github.event.inputs.log_error == 'true'

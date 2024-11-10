@@ -43,16 +43,16 @@ jobs:
         run: pytest tests/ > pytest-results.log
         continue-on-error: true
 
-      - name: Log errors if tests fail and log_error is true
-        if: failure() && github.event.inputs.log_error == 'true'
-        run: echo "Logging error..." > error_log.txt
-
-      - name: Upload error log
-        if: failure() && github.event.inputs.log_error == 'true'
-        uses: actions/upload-artifact@v4
+      - name: Upload error logs if tests failed and logging is enabled
+        if: ${{ steps.run_tests.outcome == 'failure' && github.event.inputs.log_errors == 'true' }}
+        uses: actions/upload-artifact@v3
         with:
-          name: error_log
-          path: error_log.txt
+          name: error-log
+          path: pytest-results.log
+
+      - name: Fail job if tests failed
+        if: ${{ steps.run_tests.outcome == 'failure' }}
+        run: exit 1
 
 
 
